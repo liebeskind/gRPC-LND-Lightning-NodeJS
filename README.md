@@ -1,5 +1,7 @@
 # gRPC-LND-Lightning-NodeJS
-Fully functioning javascript grpc server based on NodeJS.  Based on https://dev.lightning.community/guides/javascript-grpc/ and Stage 1 of https://dev.lightning.community/tutorial/01-lncli/index.html
+Fully functioning javascript grpc server based on NodeJS.  Based on [this javascript grpc guide](https://dev.lightning.community/guides/javascript-grpc/) and Stage 1 of [the lightning dev tutorial]( https://dev.lightning.community/tutorial/01-lncli/index.html).
+
+This assumes you have completed Stage 1 of the dev tutorial.  If you have not, do that first.
 
 ## To Run
 ### Set up Environment
@@ -9,8 +11,9 @@ Fully functioning javascript grpc server based on NodeJS.  Based on https://dev.
 CERT="/Users/[user]/Library/Application Support/Lnd/tls.cert"
 AUTH="/Users/[user]/go/dev/bob/data/chain/bitcoin/simnet/admin.macaroon"
 ```
+**Make sure to change [user] to whatever your directory path is.  You can find this by typing `pwd` into your command line**
 
-In the AUTH variable above, this is using 'bob' from Stage 1 of https://dev.lightning.community/tutorial/01-lncli/index.html.  We're assuming you're connected to 'bob' at `localhost:10002`, but you can change that in the auth.js file if not.
+In the AUTH variable above, this is using 'bob' from Stage 1 of [the lightning dev tutorial](https://dev.lightning.community/tutorial/01-lncli/index.html).  We're assuming you're connected to 'bob' at `localhost:10002`, but you can change that in the auth.js file if not.
 
 ### Install Node Modules
 Type `npm install` into command line to install node modules.
