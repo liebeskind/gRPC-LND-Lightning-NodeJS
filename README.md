@@ -1,4 +1,4 @@
-# gRPC-LND-Lightning-NodeJS
+# LND gRPC Lightning NodeJS Reference
 This is a fully functioning javascript grpc server for connecting to Lightning nodes based on NodeJS.  You can add commands from [the lightning gRPC api](https://api.lightning.community/#lnd-grpc-api-reference).
 
 This server is based on [this javascript grpc guide](https://dev.lightning.community/guides/javascript-grpc/) and Stage 1 of [the lightning dev tutorial]( https://dev.lightning.community/tutorial/01-lncli/index.html). This assumes you have completed Stage 1 of the dev tutorial.  If you have not, do that first.
