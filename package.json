@@ -7,7 +7,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "",
+  "author": {
+    "name": "Daniel Liebeskind",
+    "twitter": "@dliebeskind",
+  },
   "license": "ISC",
   "dependencies": {
     "@grpc/proto-loader": "^0.5.3",
