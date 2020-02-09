@@ -8,17 +8,7 @@ var protoLoader = require("@grpc/proto-loader");
 // error when we communicate with the lnd rpc server.
 process.env.GRPC_SSL_CIPHER_SUITES = 'HIGH+ECDSA'
 
-var packageDefinition = protoLoader.loadSync("rpc.proto", {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true
-});
-var protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
-// The protoDescriptor object has the full package hierarchy
-var lnrpc = protoDescriptor.lnrpc;
-
+// Macaroon cred
 var macaroonCreds = grpc.credentials.createFromMetadataGenerator((
   args,
   callback
@@ -31,32 +21,50 @@ var macaroonCreds = grpc.credentials.createFromMetadataGenerator((
 
 var lndCert = fs.readFileSync(auth.config.CERT);
 var sslCreds = grpc.credentials.createSsl(lndCert);
-var walletUnlocker = new lnrpc.WalletUnlocker(auth.config.HOST, sslCreds);
-var creds = grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds);
-var ln = new lnrpc.Lightning(auth.config.HOST, creds);
 
-ln.getInfo({}, function(err, response) {
+var creds = grpc.credentials.combineChannelCredentials(sslCreds, macaroonCreds);
+
+// Create Lightning rpc
+var packageDefinition = protoLoader.loadSync("rpc.proto", {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true
+});
+var protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
+var lnrpc = protoDescriptor.lnrpc;
+var walletUnlocker = new lnrpc.WalletUnlocker(auth.config.HOST, sslCreds);
+var lightning = new lnrpc.Lightning(auth.config.HOST, creds);
+
+lightning.getInfo({}, function(err, response) {
   	if (err) console.log('Error:', err);
   	if (response) console.log('GetInfo:', response);
   });
 
 // Response-streaming RPC
 // Create an invoice and it will display in console.
-var call = ln.subscribeInvoices({});
+const invoiceRequest = {
+	value: 1000
+}
+
+lightning.addInvoice(invoiceRequest, (err, response) => {
+	if (err) console.log(err)
+	if (response) console.log("Added Invoice", response)
+})
+
+// Monitor invoices
+var call = lightning.subscribeInvoices({});
 call.on('data', function(invoice) {
-    console.log(invoice);
+    console.log("Invoice Data", invoice);
 })
 .on('end', function() {
-  // The server has finished sending
 })
 .on('status', function(status) {
-  // Process status
-  console.log("Current status" + status);
+  console.log("Current invoice status" + status);
 });
 
-
-
 module.exports = {
-  ln,
+  lightning,
   walletUnlocker
 };
